@@ -25,7 +25,7 @@ public class Vote extends BaseEntity {
 
 
     @JoinColumn(name = "user_id")
-    @OneToOne
+    @ManyToOne
     User user;
 
     @Column(name = "rec_time")

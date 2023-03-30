@@ -19,10 +19,12 @@
                 <h1>Выборов пока что нету</h1>
             </div>
 
-            <h1 th:if="${votings.size() != 0}">Выборы что проходят сейчас</h1>
+            <h1 th:if="${votings.size() != 0 && active}">Выборы что проходят сейчас</h1>
 
-            <div th:if="${votings.size() != 0}" class="mx-4 col col-md-12 col-lg-12 col-xl-12" th:each=" voting: ${votings}">
-                <div class="card" style="border-radius: 15px;">
+            <h1 th:if="${votings.size() != 0 && !active}">Закончившиеся выборы</h1>
+
+            <div th:if="${votings.size() != 0}" class="mt-4 col col-md-12 col-lg-12 col-xl-12" th:each=" voting: ${votings}">
+                <div class="card " style="border-radius: 15px;">
                     <div class="card-body p-4">
                         <div class="d-flex text-black">
 

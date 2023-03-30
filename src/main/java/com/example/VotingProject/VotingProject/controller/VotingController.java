@@ -31,6 +31,7 @@ public class VotingController {
 
         model.addAttribute(model.addAttribute("votings", votingService.votingList(Status.ACTIVE)));
         model.addAttribute(model.addAttribute("user", userService.getUserByPrinciple(principal)));
+        model.addAttribute(model.addAttribute("active", true));
 
         return "voting/votings";
     }
@@ -40,6 +41,7 @@ public class VotingController {
 
         model.addAttribute(model.addAttribute("votings", votingService.votingList(Status.FINISHED)));
         model.addAttribute(model.addAttribute("user", userService.getUserByPrinciple(principal)));
+        model.addAttribute(model.addAttribute("active", false));
 
         return "voting/votings";
     }
@@ -52,7 +54,6 @@ public class VotingController {
 
         Voting voting = votingService.getVotingById(id);
         List<CandidatesWithVotes> candidates = candidateService.getCandidatesWithVotes(voting);
-        System.out.println(candidates);
         User user = userService.getUserByPrinciple(principal);
 
         model.addAttribute("candidates", candidates);
@@ -63,8 +64,8 @@ public class VotingController {
     }
 
     @PostMapping("/{id}/finish")
-    public String finishVoting(@PathVariable Long id){
-        votingService.finishVoting(id);
+    public String finishVoting(@PathVariable Long id, Principal principal){
+        votingService.finishVoting(id, userService.getUserByPrinciple(principal));
 
         return "redirect:/voting/all/finished";
     }
@@ -111,18 +112,19 @@ public class VotingController {
     }
 
     @PostMapping("/{id}/vote/{candidate-id}")
-    public String addCandidates(
+    public String vote(
             @PathVariable Long id,
-            @ModelAttribute("user") User user,
+            Principal principal,
             @PathVariable("candidate-id") Long candidateId){
-
+        User user = userService.getUserByPrinciple(principal);
         votingService.addVote(id, user, candidateId);
 
         return "redirect:/voting/{id}";
     }
 
     @PostMapping("/create")
-    public String createVote(@ModelAttribute("user") User user,@ModelAttribute("voting") Voting voting){
+    public String createVote(Principal principal,@ModelAttribute("voting") Voting voting){
+        User user = userService.getUserByPrinciple(principal);
         Long id = votingService.createVoting(voting, user);
 
         return "redirect:/voting/create/" + id + "/add-candidates";

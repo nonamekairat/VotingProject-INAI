@@ -24,7 +24,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Voting extends BaseEntity {
 
-    @Column(name = "vote_name")
+    @Column(name = "vote_name", unique = true)
     String name;
 
 
@@ -32,7 +32,7 @@ public class Voting extends BaseEntity {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "candidate_voting_item",
     joinColumns = @JoinColumn(name = "voting_id"),
-    inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    inverseJoinColumns = @JoinColumn(name = "candidate_id", unique = true))
     List<Candidate> candidates;
 
     @JoinColumn(name = "vote_id")

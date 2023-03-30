@@ -23,13 +23,12 @@ public class SchedulerJob {
 
     @Scheduled(fixedDelay = 24 * 60 * 60 * 1000)
     public void checkAvailability(){
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
 
         List<Voting> votingList = votingService.votingList(Status.ACTIVE);
         for (Voting voting : votingList) {
-            System.out.println(convertToLocalDateTime(voting.getEndTime()).compareTo(now) < 0);
-            if (convertToLocalDateTime(voting.getEndTime()).compareTo(now) < 0) {
+            System.out.println(votingService.convertToLocalDateTime(voting.getEndTime()).compareTo(now) < 0);
+            if (votingService.convertToLocalDateTime(voting.getEndTime()).compareTo(now) < 0) {
                 votingService.finishVoting(voting.getId());
 
             }
@@ -37,9 +36,4 @@ public class SchedulerJob {
 
     }
 
-    public LocalDateTime convertToLocalDateTime(Date dateToConvert) {
-        return dateToConvert.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
-    }
 }
